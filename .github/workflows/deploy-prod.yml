@@ -43,7 +43,6 @@ jobs:
 
       - name: Pulumi Deploy
         run: |
-          cd src/urlup_be/stacks/domain
           pulumi stack select -c \
             --stack "${STACK}"
           pulumi up --non-interactive --yes

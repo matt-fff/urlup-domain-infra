@@ -46,7 +46,6 @@ jobs:
 
       - name: Pulumi Preview
         run: |
-          cd src/urlup_be/stacks/domain
           pulumi stack select -c \
             --stack "${STACK}"
           pulumi preview --non-interactive
