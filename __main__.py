@@ -11,14 +11,18 @@ def stack(conf: pulumi.Config):
             region="us-east-1",
         ),
     )
-    tags = conf.require_object("tags")
+    tags = conf.get_object("tags")
 
     for prefix, domain_conf in (
-        ("api", conf.require_object("api_domain")),
-        ("redirect", conf.require_object("redirect_domain")),
-        ("fe-prod", conf.require_object("frontend_prod_domain")),
-        ("fe-staging", conf.require_object("frontend_staging_domain")),
+        ("api", conf.get_object("api_domain")),
+        ("redirect", conf.get_object("redirect_domain")),
+        ("fe-prod", conf.get_object("frontend_prod_domain")),
+        ("fe-staging", conf.get_object("frontend_staging_domain")),
     ):
+        if not domain_conf:
+            print(f"Skipping '{prefix}' - no config found")
+            continue
+
         zone = aws.route53.get_zone(name=domain_conf["zone_domain"])
         cert = aws.acm.Certificate(
             f"{prefix}Cert",
